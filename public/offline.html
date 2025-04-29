@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline - DataPulse.ai</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#3a86ff">
+  <style>
+    :root {
+      --primary-color: #3a86ff;
+      --secondary-color: #8338ec;
+      --text-color: #212529;
+      --background-color: #f8f9fa;
+      --border-radius: 8px;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --text-color: #f8f9fa;
+        --background-color: #121212;
+      }
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .offline-container {
+      max-width: 600px;
+      padding: 40px;
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      .offline-container {
+        background-color: #1e1e1e;
+      }
+    }
+    
+    .offline-icon {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 30px;
+    }
+    
+    .offline-icon svg {
+      width: 100%;
+      height: 100%;
+    }
+    
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    p {
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+    
+    .btn {
+      display: inline-block;
+      background-color: var(--primary-color);
+      color: white;
+      padding: 12px 24px;
+      border-radius: var(--border-radius);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+      background-color: var(--secondary-color);
+    }
+    
+    .cached-content {
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 1px solid #eee;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      .cached-content {
+        border-top-color: #333;
+      }
+    }
+    
+    .cached-content h2 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+    
+    .cached-list {
+      list-style: none;
+      text-align: left;
+    }
+    
+    .cached-list li {
+      margin-bottom: 10px;
+    }
+    
+    .cached-list a {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+    
+    .cached-list a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="offline-container">
+    <div class="offline-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#3a86ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="1" y1="1" x2="23" y2="23"></line>
+        <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path>
+        <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path>
+        <path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path>
+        <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path>
+        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+        <line x1="12" y1="20" x2="12.01" y2="20"></line>
+      </svg>
+    </div>
+    
+    <h1>You're Offline</h1>
+    <p>It looks like you've lost your internet connection. Don't worry, you can still access some features of DataPulse.ai while offline.</p>
+    
+    <a href="/" class="btn">Try Again</a>
+    
+    <div class="cached-content">
+      <h2>Available Offline</h2>
+      <ul class="cached-list" id="cached-pages">
+        <li><a href="/">Home</a></li>
+        <li><a href="/dashboard">Dashboard</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  <script>
+    // Check if we're back online
+    window.addEventListener('online', () => {
+      window.location.reload();
+    });
+    
+    // Populate cached pages dynamically
+    if ('caches' in window) {
+      caches.open('datapulse-cache-v1')
+        .then(cache => {
+          return cache.keys();
+        })
+        .then(requests => {
+          const cachedList = document.getElementById('cached-pages');
+          const urls = new Set();
+          
+          // Extract unique URLs
+          requests.forEach(request => {
+            const url = new URL(request.url);
+            if (url.origin === location.origin && !url.pathname.includes('.')) {
+              urls.add(url.pathname);
+            }
+          });
+          
+          // Clear default items
+          cachedList.innerHTML = '';
+          
+          // Add each cached URL to the list
+          urls.forEach(url => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = url;
+            a.textContent = url === '/' ? 'Home' : url.substring(1);
+            li.appendChild(a);
+            cachedList.appendChild(li);
+          });
+          
+          // If no cached pages, show a message
+          if (urls.size === 0) {
+            const li = document.createElement('li');
+            li.textContent = 'No pages available offline';
+            cachedList.appendChild(li);
+          }
+        })
+        .catch(error => {
+          console.error('Error checking cache:', error);
+        });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // User profiles
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null && request.auth.uid == userId;
+      allow delete: if false; // Don't allow users to delete their profiles
+    }
+    
+    // Extractions
+    match /extractions/{extractionId} {
+      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      allow update: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+    
+    // Templates
+    match /templates/{templateId} {
+      // Allow read if the template is public or owned by the user
+      allow read: if request.auth != null && (resource.data.isPublic == true || resource.data.userId == request.auth.uid);
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      allow update: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+    
+    // Subscriptions
+    match /subscriptions/{subscriptionId} {
+      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+      // Only allow creation and updates from admin or server functions
+      allow create, update, delete: if false;
+    }
+  }
+}

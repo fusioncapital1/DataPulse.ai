@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#3a86ff" />
+    <meta
+      name="description"
+      content="Transform unstructured web data into actionable insights with DataPulse.ai - AI-powered data extraction platform"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/icons/icon-192x192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://datapulse.io/" />
+    <meta property="og:title" content="DataPulse.ai - AI-Powered Data Extraction" />
+    <meta property="og:description" content="Transform unstructured web data into actionable insights with our AI-powered data extraction platform" />
+    <meta property="og:image" content="%PUBLIC_URL%/social-preview.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://datapulse.io/" />
+    <meta property="twitter:title" content="DataPulse.ai - AI-Powered Data Extraction" />
+    <meta property="twitter:description" content="Transform unstructured web data into actionable insights with our AI-powered data extraction platform" />
+    <meta property="twitter:image" content="%PUBLIC_URL%/social-preview.png" />
+    
+    <title>DataPulse.ai - AI-Powered Data Extraction</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    
+    <!-- A2HS (Add to Home Screen) Prompt -->
+    <div id="a2hs-prompt" style="display: none; position: fixed; bottom: 20px; left: 20px; right: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 9999;">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <p style="margin: 0 0 5px; font-weight: 600;">Install DataPulse.ai</p>
+          <p style="margin: 0; font-size: 14px; color: #666;">Add to your home screen for a better experience</p>
+        </div>
+        <div>
+          <button id="a2hs-install" style="background: #3a86ff; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-weight: 500; cursor: pointer;">Install</button>
+          <button id="a2hs-dismiss" style="background: none; border: none; color: #666; padding: 8px; cursor: pointer; margin-left: 5px;">Dismiss</button>
+        </div>
+      </div>
+    </div>
+    
+    <script>
+      // A2HS (Add to Home Screen) Logic
+      let deferredPrompt;
+      const a2hsPrompt = document.getElementById('a2hs-prompt');
+      const a2hsInstall = document.getElementById('a2hs-install');
+      const a2hsDismiss = document.getElementById('a2hs-dismiss');
+      
+      window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent Chrome 67 and earlier from automatically showing the prompt
+        e.preventDefault();
+        // Stash the event so it can be triggered later
+        deferredPrompt = e;
+        // Show the A2HS prompt
+        a2hsPrompt.style.display = 'block';
+      });
+      
+      a2hsInstall.addEventListener('click', () => {
+        // Hide the A2HS prompt
+        a2hsPrompt.style.display = 'none';
+        // Show the browser install prompt
+        deferredPrompt.prompt();
+        // Wait for the user to respond to the prompt
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('User accepted the A2HS prompt');
+          } else {
+            console.log('User dismissed the A2HS prompt');
+          }
+          deferredPrompt = null;
+        });
+      });
+      
+      a2hsDismiss.addEventListener('click', () => {
+        // Hide the A2HS prompt
+        a2hsPrompt.style.display = 'none';
+      });
+    </script>
+  </body>
+</html>
