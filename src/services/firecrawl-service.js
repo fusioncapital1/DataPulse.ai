@@ -4,7 +4,7 @@
  */
 
 // Firecrawl API key (replace with your actual key)
-const FIRECRAWL_API_KEY = 'fc-e72d5fa25212477989370625258811c8';
+const FIRECRAWL_API_KEY = process.env.REACT_APP_FIRECRAWL_API_KEY;
 const FIRECRAWL_API_URL = 'https://api.firecrawl.dev/v1';
 
 /**

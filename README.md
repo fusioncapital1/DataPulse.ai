@@ -31,6 +31,7 @@ DataPulse.ai is an AI-powered data extraction and analytics platform that transf
 - npm or yarn
 - Firebase account
 - Firecrawl API key
+- Firebase CLI (firebase-tools): For managing Firebase deployments. Install via `npm install -g firebase-tools` or use with `npx`.
 
 ### Installation
 
@@ -66,11 +67,13 @@ DataPulse.ai is an AI-powered data extraction and analytics platform that transf
 5. Download your service account key:
    - Go to Project Settings > Service Accounts
    - Click "Generate new private key"
-   - Save the JSON file in the `scripts` directory
+   - Save the JSON file in the `scripts` directory. The `setup-firebase.js` script will look for a JSON file in this directory that includes `firebase-adminsdk` in its name (e.g., `yourproject-firebase-adminsdk-xxxx.json`). **Important**: Do not commit this sensitive file to Git; ensure it's listed in your `.gitignore`.
 6. Run the Firebase setup script:
-   ```bash
-   node scripts/setup-firebase.js
-   ```
+   - Make sure all dependencies are installed by running `npm install` from the project root (this should include `firebase-admin`, which is used by the setup script).
+   - Then, run the script:
+     ```bash
+     node scripts/setup-firebase.js
+     ```
    This script will create all necessary collections and sample data.
 7. Deploy Firestore security rules:
    ```bash
@@ -79,7 +82,7 @@ DataPulse.ai is an AI-powered data extraction and analytics platform that transf
 
 ### Deployment
 
-The project includes GitHub Actions workflows for CI/CD. To deploy manually:
+The project includes GitHub Actions workflows for CI/CD. Note: The current CI/CD pipeline automatically deploys the web application (Hosting). Changes to Firestore rules, Storage rules, or Firestore indexes need to be deployed manually (e.g., `firebase deploy --only firestore:rules,storage:rules` or `firebase deploy`). To deploy manually:
 
 1. Build the project
    ```bash
@@ -90,6 +93,7 @@ The project includes GitHub Actions workflows for CI/CD. To deploy manually:
    ```bash
    firebase deploy
    ```
+The CI workflow (`.github/workflows/ci.yml`) currently includes `npm run lint || true` and `npm test || true`. This means linting errors or failing tests will not stop the build or deployment. For stricter quality gates, consider removing the `|| true` parts to ensure builds fail on such issues.
 
 ## App Store Submission
 
