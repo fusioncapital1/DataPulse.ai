@@ -43,15 +43,18 @@ const Footer = () => {
         <div className="footer-section">
           <h3 className="footer-title">Legal</h3>
           <ul className="footer-links">
-            <li><a href="/terms">Terms of Service</a></li>
-            <li><a href="/privacy">Privacy Policy</a></li>
-            <li><a href="/cookies">Cookie Policy</a></li>
+            <li><a href="/TERMS_OF_SERVICE.md">Terms of Service</a></li>
+            <li><a href="/PRIVACY_POLICY.md">Privacy Policy</a></li>
+            <li><a href="/cookies">Cookie Policy</a></li> {/* Assuming this remains or is handled separately */}
           </ul>
         </div>
       </div>
 
       <div className="footer-bottom">
         <p>&copy; {currentYear} FusionCapital. All rights reserved.</p>
+        <p className="footer-legal-links">
+          <a href="/TERMS_OF_SERVICE.md">Terms of Service</a> | <a href="/PRIVACY_POLICY.md">Privacy Policy</a>
+        </p>
         <div className="social-links">
           <a href="https://twitter.com/datapulseai" aria-label="Twitter">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">

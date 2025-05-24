@@ -27,13 +27,13 @@ jobs:
       run: npm ci
     
     - name: Run linting
-      run: npm run lint || true
+      run: npm run lint
     
     - name: Build
       run: npm run build
     
     - name: Run tests
-      run: npm test || true
+      run: npm test
     
     - name: Upload build artifact
       uses: actions/upload-artifact@v3
@@ -61,4 +61,4 @@ jobs:
         args: deploy --only hosting
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        PROJECT_ID: datapulse-ai
+        PROJECT_ID: ${{ secrets.PRODUCTION_FIREBASE_PROJECT_ID }}
